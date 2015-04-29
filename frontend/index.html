@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stroop Test</title>
+    <link rel="stylesheet" href="stroop.css" />
+	<meta name="Title" content="Stroop Test" />
+	<meta name="description" content="Research for Student Name" />
+	<!-- The following line includes jquery-ui.css or jquery-ui-custom.css from template dir, template.css and needed specific css file for survey -->
+    <link rel='stylesheet' type='text/css' media='all' href='css/jquery-ui-custom.css' />
+	<link rel='stylesheet' type='text/css' media='all' href='css/template.css' />
+
+			
+	<!--[if lte IE 6]>
+		<link rel="stylesheet" type="text/css" href="css/ie_fix_6.css" />
+	<![endif]-->
+	<!--[if IE 7]>
+		<link rel="stylesheet" type="text/css" href="css/ie_fix_7.css" />
+	<![endif]-->
+	<!--[if IE 8]>
+		<link rel="stylesheet" type="text/css" href="css/ie_fix_8.css" />
+	<![endif]-->
+	
+	<script src="js/fabric.js"></script>
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="stroop.js"></script>
+  	<script type="text/javascript">
+		var logging = []
+		
+
+		var experiment = [
+			{"type": "announcement",
+				"title": "Welkom bij het onderzoek",
+				"tekst": "Hi there, <br /> <br /> " +
+						"Here is an explanation of what I'm trying to research. <br /> <br /> <br /> " +
+						"Thank you for helping me, kind regards, <br /> <br /> " + 
+						"Student Name <br /> <br /> <br /> " + 
+						"<div class='float-wrapper'>" + 
+						"<div class='contact-student'>Student Name  <br /> " + 
+						"student.mail@university.com <br /> " + 
+						"012-3456789 </div>" + 
+						"<div class='contact-docent'>dr. Tutor Name <br /> " + 
+						"tutor.name@university.com <br /> " + 
+						"012-3456789 (secretariaat) </div>"  +
+						"</div>",
+				"buttondisplay": true,
+				"buttontext": "I've read the text"
+			},
+			{"type": "agreement",
+				"title": "Agree",
+				"tekst": "In order to use the results of the test you're going to do: <br /> " + 
+					"Title of  research<br /> <br /> "+
+					"I've read everything on the previous screen. I have had the opportunity to contact the researcher, and any questions I had about this research are answered by now. I've had enough time to decide whether I wanted to join or not. <br />" +
+					"I know this is voluntary. I know I can decide at every point to abort the questionaire or test. Some other statements about my information being used. Etc.<br /> " +
+					"My information may be used to do the research as mentioned.<br / > <br />	" + 
+					"Yes, I will.<br /> <br />",
+				"backButton": true,
+				"notAgreed": [{
+					"type": "announcement",
+					"title": "End of this test",
+					"tekst": "You've decided not to agree with the terms of thi research. Therefor, you cannot do this test. <br/>" +
+						"Close your browser window in order to exit the research. <br /><br />",
+					"buttondisplay": false					
+				}]
+			},
+			{"type": "form",
+				"title": "About you",
+				"tekst": "In order for the test to proceed, I need to know some things about you:",
+				"question": "What is your birth date?",
+				"variable": "birthdate",
+				"checkType": "date"
+			},
+			{"type": "controle",
+				"variable": "birthdate",
+				"checkType": "range",
+				
+				// Only people between 25 and 65 are allowed
+				"minimum": new Date(new Date().getFullYear() - 66, new Date().getMonth(), new Date().getDate() + 1),
+				"maximum": new Date(new Date().getFullYear() - 25, new Date().getMonth(), new Date().getDate()),
+				"notAgreed": [{
+					"type": "announcement",
+					"title": "End of this test",
+					"tekst": "I'm sorry, but you do not fall within the target group of this. Therefor, you cannot do this test. <br/>" +
+						"Close your browser window in order to exit the research. <br /><br />",
+					"buttondisplay": false						
+				}]
+			},
+			{"type": "form",
+				"title": "About you",
+				"tekst": "In order for the test to proceed, I need to know some things about you:",
+				"question": "Are you (partially or fully) suffering of color blindness (daltonism)?",
+				"variable": "daltonism",
+				"checkType": "boolean",
+				"responseen": {true: "yes", false: "no"}
+			},
+			{"type": "controle",
+				"variable": "daltonism",
+				"checkType": "value",
+				// Schrikkeljaren zijn geen probleem, zorgen voor automatische 'overflow' van 29 feb. naar 1 maart.
+				"requiredValue": false,
+				"notAgreed": [{
+					"type": "announcement",
+					"title": "End of this test",
+					"tekst": "I'm sorry, but you do not fall within the target group of this. Therefor, you cannot do this test. <br/>" +
+						"Close your browser window in order to exit the research. <br /><br />",
+					"buttondisplay": false					
+				}]
+			},
+			{"type": "form",
+				"title": "Background questions",
+				"tekst": "In order for the test to proceed, I need to know some things about you:",
+				"question": "Is English your native language?",
+				"variable": "nativelanguage",
+				"checkType": "boolean",
+				"responseen": {true: "yes", false: "no"}
+			},
+			{"type": "controle",
+				"variable": "nativelanguage",
+				"checkType": "value",
+				// Schrikkeljaren zijn geen probleem, zorgen voor automatische 'overflow' van 29 feb. naar 1 maart.
+				"requiredValue": true,
+				"notAgreed": [{
+					"type": "announcement",					
+					"title": "End of this test",
+					"tekst": "I'm sorry, but you do not fall within the target group of this. Therefor, you cannot do this test. <br/>" +
+						"Close your browser window in order to exit the research. <br /><br />",
+					"buttondisplay": false					
+				}]
+			},
+			{"type": "announcement",
+				"title": "Explanation of the test",
+				"tekst": "During this test you will see words printed in different colors, and a circle of colors around the word. Your task is to click the matching color on this circle as soon as possible.<br /> " + 
+					"Before the next word appears, you have to click on a black dot in the center of the screen.<br /> <br /> " + 
+					"We'll start with a small example of 5 words. <br /> <br />" ,
+				"buttondisplay": true,
+				"buttontext": "Start example test"
+			},
+			{"type": "proef",
+				"words": [
+					["computer", "music", "colleague", "play", "water"]
+				]
+			},
+			{"type": "announcement",
+				"title": "Real Test",
+				"tekst": "This is the end of the example. You've had the chance to exercise and know now how the test wordks.<br /> <br /> You'll now start with the real test, containing 100 words. <br /> Try to match the colors as soon as possible. <br /> <br />",
+				"buttondisplay": true,
+				"buttontext": "Continue with the test"
+			},
+			{"type": "experiment",
+				"words": [
+					["these", "are", "the", "neutral", "words"]
+					, ["not", "neutral", "but", "randomized", "words", "you", "wanna", "test", "with", "be", "sure", "you", "have", "enough", "of", "them"]
+					, ["last", "words", "are", "neutral", "too"]
+				]
+			},
+			{"type": "choice"},
+			{"type": "announcement",
+				"title": "Finished!",
+				"tekst": "You are finished by now. You can of course place a link here in order to continue a second test (for example, a questionnaire)",
+				"buttondisplay": false
+			}
+		]
+		
+		function onLoad() {
+			startTest(experiment);
+		}
+		
+
+	</script> 
+  </head>
+  <body onload="onLoad()" id="page_bg" class="lang-nl groupbygroup showprogress showqnumcode-X">
+  <div id="fb-root"></div>
+    <div class="outerframe">
+		<div id="wrapper2">
+			<div id="survey-wrapper">
+				<div id="gjyp-header">
+					<div class="gjyp-header-left">
+						<div class="gjyp-header-right"></div>
+					</div>
+				</div>
+				<div id="gjyp-header-content">
+					Stroop Test Header
+				</div>
+				<div class="survey-main">
+					<div class="announcement">
+						<div id="group-0">
+							<div id="announcement-title" class="survey-groupname"></div>
+							<div id="survey-groupdescription"><span id="announcement-contents"></span></div>
+							<div id="survey-question-space"></div>
+						</div>
+						<div class="survey-navigator">
+							<button class="submit ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-secondary" id="announcement-ok">
+								<span class="ui-button-text" id="announcement-ok-text">Ok</span>
+								<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-e"></span>
+							</button>
+						</div>
+					</div>
+					<div class="agreement-dialog">
+						<h1 id="agreement-title"></h1>
+						<span id="agreement-contents"></span>
+						
+						<button class="submit ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="back-agreement-button">
+							<span class="ui-button-icon-primary ui-icon ui-icon-triangle-1-w"></span>
+							<span class="ui-button-text">Go back (to re-read the text)</span>
+						</button>
+						<button class="submit ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="not-agreement-button">
+							<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+							<span class="ui-button-text">I do not agree</span>
+						</button>
+						<button class="submit ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-secondary" id="agreement-button">
+							<span class="ui-button-text">I agree</span>
+							<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-e"></span>
+						</button>
+					</div>
+					<div class="form-dialog">
+						<div class="survey-groupname" id="form-title"></div>
+						
+						<div class="survey-groupdescription" id="form-tekst"></div>
+						<div class="survey-question">
+							<div id="form-question"></div>
+							<div id="form-response"></div>
+							<div id="survey-question-space"></div>
+						</div>
+						<button class="submit ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-secondary" id="form-choice">
+							<span class="ui-button-text">Continue</span>
+							<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-e"></span>
+						</button>
+					</div>
+					<canvas id="c" width="600" height="500"></canvas>
+				</div>
+				<div id="prefooter1"></div>
+				<div id="prefooter3"></div>
+				<div id="footer">
+					<div class="rk-1">
+						<div class="rk-2"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+	
+  </body>
+</html>

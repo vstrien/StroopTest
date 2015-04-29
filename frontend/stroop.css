@@ -1,0 +1,18 @@
+.announcement, .agreement-dialog, .form-dialog {
+	display: none;
+}
+.contact-student { 
+	float: left;
+}
+.contact-docent {
+	float: right;
+}
+.float-wrapper {
+	overflow: hidden;
+}
+.canvas-container {
+	margin: 0 auto;
+}
+#announcement-title {
+	margin-bottom: 20px;
+}
